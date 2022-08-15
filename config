@@ -1,0 +1,57 @@
+[user]
+	name = David Hochhauser
+	email = dhochhauser@clearwateranalytics.com
+[core]
+	editor = code -w
+	excludesfile = /Users/dhochhauser/.config/git/gitignore_global
+	pager = less -x4
+[bugtraq]
+	logregex = ([A-Z]+-[0-9]+)
+	url = https://jira.arbfund.com/browse/%BUGID%
+	number = false
+[diff]
+	tool = kdiff3
+[difftool "sourcetree"]
+	cmd = /Users/dhochhauser/Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$LOCAL\" \"$REMOTE\"
+	path = 
+[difftool "kdiff3"]
+	path = kdiff3
+[difftool "p4merge"]
+	cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge $LOCAL $REMOTE
+[difftool]
+	prompt = false
+[merge]
+	tool = kdiff3
+[mergetool "sourcetree"]
+	cmd = /Users/dhochhauser/Applications/kdiff3.app/Contents/MacOS/kdiff3 \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"
+	trustExitCode = true
+[mergetool "kdiff"]
+	path = kdiff3
+[mergetool]
+	prompt = false
+[alias]
+	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr %C(blue)%an%Creset' --abbrev-commit
+	slog = lg
+[grep]
+	lineNumber = true
+[filesystem "Oracle Corporation|15|/dev/disk1s2"]
+	timestampResolution = 11000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[gui]
+	fontdiff = -family Menlo -size 14 -weight normal -slant roman -underline 0 -overstrike 0
+	tabsize = 4
+[filesystem "Oracle Corporation|14.0.1|/dev/disk1s2"]
+	timestampResolution = 7000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[filesystem "Oracle Corporation|16|/dev/disk1s2"]
+	timestampResolution = 11000 nanoseconds
+	minRacyThreshold = 0 nanoseconds
+[commit]
+	template = /Users/dhochhauser/.stCommitMsg
+[credential]
+	helper = osxkeychain
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
