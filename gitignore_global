@@ -164,7 +164,7 @@ buildNumber.properties
 **/nbproject/Package-*.bash
 build/
 nbbuild/
-dist/
+; dist/     ; DON'T DO THIS.  It breaks the Paligo upload.
 nbdist/
 .nb-gradle/
 
