@@ -4,7 +4,7 @@
 [core]
 	editor = code -w
 	excludesfile = /Users/dhochhauser/.config/git/gitignore_global
-	pager = less -x4
+	pager = less -x4 -F
 [bugtraq]
 	logregex = ([A-Z]+-[0-9]+)
 	url = https://jira.arbfund.com/browse/%BUGID%
