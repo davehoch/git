@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# prepends jira case to commit message if not already present
+#
+# Script stolen from: https://stash.arbfund.com/projects/IMP/repos/scripts/browse/bash-scripts/git-helpers/prepare-commit-msg
+#
+# Expects branch name like
+# feature/JIRAQUE-1234-branch-message
+# JIRAQUE-1234-branch-message
+# JIRAQUE-1234
+#
+# ###### Set up Guide ######
+# For Local:
+# Either paste this file into your local repo .git/hooks/ folder, or apply it globally
+#
+# For global:
+# Run commands (in git bash, terminal, something linux based)
+# `mkdir -p ~/git/hooks/`
+# `git config --global core.hooksPath ~/git/hooks/`
+# Paste this file "prepare-commit-msg" into that folder
+
+# Make sure we aren't on a rebase branch
+if [ $(git branch | grep -c 'rebasing') -ne 0 ]; then
+  echo "prepare-commit-msg hook: Disabling prepare-commit-msg hook on rebase"
+  exit 0
+fi
+
+commit_message_file=$1
+
+read -r commit_message_line_one < "$commit_message_file"
+case_in_commit_count=$(echo "$commit_message_line_one" | grep -c "^[\?[A-Z]\+-[0-9]\+]\?")
+
+# Check if a valid case is already at start of commit message. i.e. "[QUEUE-1234] commit message"
+if [[ $case_in_commit_count -lt 1 ]]; then
+    # Try to parse jira case for branch name, and if valid then prepend it to the commit message
+    branch_name=$(git symbolic-ref --short HEAD)
+    jira_case=$(echo "$branch_name" | sed -e 's/.*\///' -e 's/^\([A-Z]*-[0-9]*\).*/\1/')
+    if [[ $jira_case =~ [A-Z]+-[0-9]+ ]]; then
+        # Jira case in branch name parsed successfully and is valid
+        jira_case_in_commit_count=$(grep -c "$jira_case" "$commit_message_file")
+        if [[ $jira_case_in_commit_count -lt 1 ]]; then
+            echo "prepare-commit-msg hook: Prepending case number ${jira_case} to commit message"
+            sed -i '' "1s/^/$jira_case /" "$commit_message_file" # Prepend jira_case to beginning of commit message
+        fi
+    else
+        echo "prepare-commit-msg hook: \033[0;31mERROR: Commit message does not contain a valid case number, and it could not be parsed from the branch"
+        exit 1
+    fi
+fi
