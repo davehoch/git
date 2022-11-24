@@ -1,13 +1,15 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # prepends jira case to commit message if not already present
 #
-# Script stolen from: https://stash.arbfund.com/projects/IMP/repos/scripts/browse/bash-scripts/git-helpers/prepare-commit-msg
+# Script originally stolen from: https://stash.arbfund.com/projects/IMP/repos/scripts/browse/bash-scripts/git-helpers/prepare-commit-msg
 #
 # Expects branch name like
 # feature/JIRAQUE-1234-branch-message
 # JIRAQUE-1234-branch-message
 # JIRAQUE-1234
+#
+# use `git commit -n` to bypass this script.
 #
 # ###### Set up Guide ######
 # For Local:
@@ -19,8 +21,12 @@
 # `git config --global core.hooksPath ~/git/hooks/`
 # Paste this file "prepare-commit-msg" into that folder
 
+boldred="\033[1;31m"
+green="\033[0;32m"
+noformat="\033[0m"
+
 # Make sure we aren't on a rebase branch
-if [ $(git branch | grep -c 'rebasing') -ne 0 ]; then
+if [ "$(git branch | grep -c 'rebasing')" -ne 0 ]; then
   echo "prepare-commit-msg hook: Disabling prepare-commit-msg hook on rebase"
   exit 0
 fi
@@ -28,22 +34,29 @@ fi
 commit_message_file=$1
 
 read -r commit_message_line_one < "$commit_message_file"
-case_in_commit_count=$(echo "$commit_message_line_one" | grep -c "^[\?[A-Z]\+-[0-9]\+]\?")
+case_in_commit=$(echo "$commit_message_line_one" | grep -E -o "^\w*-\d+" | head -1)
+case_in_branch=$(git branch --show-current | grep -E -o '\w*-\d+' | head -1)
 
-# Check if a valid case is already at start of commit message. i.e. "[QUEUE-1234] commit message"
-if [[ $case_in_commit_count -lt 1 ]]; then
-    # Try to parse jira case for branch name, and if valid then prepend it to the commit message
-    branch_name=$(git symbolic-ref --short HEAD)
-    jira_case=$(echo "$branch_name" | sed -e 's/.*\///' -e 's/^\([A-Z]*-[0-9]*\).*/\1/')
-    if [[ $jira_case =~ [A-Z]+-[0-9]+ ]]; then
-        # Jira case in branch name parsed successfully and is valid
-        jira_case_in_commit_count=$(grep -c "$jira_case" "$commit_message_file")
-        if [[ $jira_case_in_commit_count -lt 1 ]]; then
-            echo "prepare-commit-msg hook: Prepending case number ${jira_case} to commit message"
-            sed -i '' "1s/^/$jira_case /" "$commit_message_file" # Prepend jira_case to beginning of commit message
-        fi
-    else
-        echo "prepare-commit-msg hook: \033[0;31mERROR: Commit message does not contain a valid case number, and it could not be parsed from the branch"
-        exit 1
-    fi
+# These are helpful for debugging
+# echo "${case_in_commit}"
+# echo "${case_in_branch}"
+
+if [[ -z $case_in_commit ]] && [[ -n $case_in_branch ]]; then
+    # There is no case in the commit and it has a case in the branch
+    echo -e "prepare-commit-msg hook: Prepending case number (${green}${case_in_branch}${noformat}) to commit message."
+    sed -i '' "1s/^/$case_in_branch /" "$commit_message_file"
+elif [[ -n $case_in_commit ]] && [[ -n $case_in_branch ]] && [[ $case_in_commit -ne $case_in_branch ]]; then
+    # There is a case in the commit and it doesn't match the case in the branch
+    # TODO ask if they really want to do this
+    echo -e "prepare-commit-msg hook: ${boldred}WARNING:${noformat} Jira case in commit message (${green}${case_in_commit}${noformat}) doesn't match the Jira case in the branch (${green}${case_in_branch}${noformat})."
+    echo -e "prepare-commit-msg hook: Use '${green}git commit --amend${noformat}' if this was a mistake."
+elif [[ -n $case_in_commit ]] && [[ -z $case_in_branch ]]; then
+    # There is a case in the commit and no case in the branch
+    echo -e "prepare-commit-msg hook: ${boldred}WARNING:${noformat} No case found in the branch name.  Is the branch named correctly?"
+# elif [[ -n $case_in_commit ]] && [[ -n $case_in_branch ]] && [[ $case_in_commit -eq $case_in_branch ]]; then
+#     # if there is a case in the commit and it matches the case in the branch
+# elif [[ -z $case_in_commit ]] && [[ -z $case_in_branch ]]; then
+#     # if there is a no case in the commit and no case in the branch
 fi
+
+exit 0
