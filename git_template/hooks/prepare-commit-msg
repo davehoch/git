@@ -37,10 +37,6 @@ read -r commit_message_line_one < "$commit_message_file"
 case_in_commit=$(echo "$commit_message_line_one" | grep -E -o "^\w*-\d+" | head -1)
 case_in_branch=$(git branch --show-current | grep -E -o '\w*-\d+' | head -1)
 
-# These are helpful for debugging
-# echo "${case_in_commit}"
-# echo "${case_in_branch}"
-
 if [[ -z $case_in_commit ]] && [[ -n $case_in_branch ]]; then
     # There is no case in the commit and it has a case in the branch
     echo -e "prepare-commit-msg hook: Prepending case number (${green}${case_in_branch}${noformat}) to commit message."
@@ -53,10 +49,6 @@ elif [[ -n $case_in_commit ]] && [[ -n $case_in_branch ]] && [[ $case_in_commit 
 elif [[ -n $case_in_commit ]] && [[ -z $case_in_branch ]]; then
     # There is a case in the commit and no case in the branch
     echo -e "prepare-commit-msg hook: ${boldred}WARNING:${noformat} No case found in the branch name.  Is the branch named correctly?"
-# elif [[ -n $case_in_commit ]] && [[ -n $case_in_branch ]] && [[ $case_in_commit -eq $case_in_branch ]]; then
-#     # if there is a case in the commit and it matches the case in the branch
-# elif [[ -z $case_in_commit ]] && [[ -z $case_in_branch ]]; then
-#     # if there is a no case in the commit and no case in the branch
 fi
 
 exit 0
