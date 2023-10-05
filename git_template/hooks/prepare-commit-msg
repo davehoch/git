@@ -35,7 +35,7 @@ commit_message_file=$1
 
 read -r commit_message_line_one < "$commit_message_file"
 case_in_commit=$(echo "$commit_message_line_one" | grep -E -o "^\w*-\d+" | head -1)
-case_in_branch=$(git branch --show-current | grep -E -o '\w*-\d+' | head -1)
+case_in_branch=$(git branch --show-current | grep -E -o '\w*-\d+' | head -1 | tr '[:lower:]' '[:upper:]')
 
 if [[ -z $case_in_commit ]] && [[ -n $case_in_branch ]]; then
     # There is no case in the commit and it has a case in the branch
