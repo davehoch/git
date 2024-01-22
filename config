@@ -58,3 +58,5 @@
 	rebase = true
 [fetch]
 	prune = true
+[commit]
+	template = /Users/dhochhauser/.stCommitMsg
