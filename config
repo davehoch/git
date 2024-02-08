@@ -1,6 +1,6 @@
 [user]
 	name = David Hochhauser
-	email = dhochhauser@clearwateranalytics.com
+	email = 
 [core]
 	editor = code -w
 	excludesfile = /Users/dhochhauser/.config/git/gitignore_global
