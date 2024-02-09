@@ -1,14 +1,8 @@
-[user]
-	name = David Hochhauser
-	email = 
 [core]
 	editor = code -w
 	excludesfile = /Users/dhochhauser/.config/git/gitignore_global
 	pager = less -x4 -F
 	hooksPath = ~/.config/git/git_template/hooks
-[bugtraq]
-	logregex = ([A-Z]+-[0-9]+)
-	number = false
 [diff]
 	tool = kdiff3
 [difftool "sourcetree"]
@@ -57,5 +51,7 @@
 	rebase = true
 [fetch]
 	prune = true
-[commit]
-	template = /Users/dhochhauser/.stCommitMsg
+# This is for settings specific to the local machine that should
+# not be committed.
+[include]
+	path = config.local
