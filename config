@@ -54,4 +54,4 @@
 # This is for settings specific to the local machine that should
 # not be committed.
 [include]
-	path = config.local
+	path = config_local
