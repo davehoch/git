@@ -2,8 +2,6 @@
 #
 # prepends jira case to commit message if not already present
 #
-# Script originally stolen from: https://stash.arbfund.com/projects/IMP/repos/scripts/browse/bash-scripts/git-helpers/prepare-commit-msg
-#
 # Expects branch name like
 # feature/JIRAQUE-1234-branch-message
 # JIRAQUE-1234-branch-message

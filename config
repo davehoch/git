@@ -8,7 +8,6 @@
 	hooksPath = ~/.config/git/git_template/hooks
 [bugtraq]
 	logregex = ([A-Z]+-[0-9]+)
-	url = https://jira.arbfund.com/browse/%BUGID%
 	number = false
 [diff]
 	tool = kdiff3
