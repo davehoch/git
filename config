@@ -3,6 +3,7 @@
 	excludesfile = /Users/dhochhauser/.config/git/gitignore_global
 	pager = less -x4 -F
 	hooksPath = ~/.config/git/git_template/hooks
+	fsmonitor = true
 [diff]
 	tool = kdiff3
 [difftool "sourcetree"]
