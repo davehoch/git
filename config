@@ -52,6 +52,8 @@
 	rebase = true
 [fetch]
 	prune = true
+[rerere]
+	enabled = true
 # This is for settings specific to the local machine that should
 # not be committed.
 [include]
