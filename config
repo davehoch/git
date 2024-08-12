@@ -13,6 +13,10 @@
 	path = kdiff3
 [difftool "p4merge"]
 	cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge $LOCAL $REMOTE
+[difftool "difftastic1"]
+	cmd = difft --display="inline" --tab-width=2 --context=0 "$LOCAL" "$REMOTE"
+[difftool "difftastic2"]
+	cmd = difft --display="side-by-side" --tab-width=2 --context=2 "$LOCAL" "$REMOTE"
 [difftool]
 	prompt = false
 [merge]
@@ -27,6 +31,8 @@
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen%cr %C(blue)%an%Creset' --abbrev-commit
 	slog = lg
+	difft1 = difftool --tool=difftastic1
+	difft2 = difftool --tool=difftastic2
 [grep]
 	lineNumber = true
 [filesystem "Oracle Corporation|15|/dev/disk1s2"]
